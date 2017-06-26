@@ -180,7 +180,7 @@ class WarningMessagesTest(CourseOutlineTest):
         features = [
             [True, False],             # Possible values for is_released
             self.PublishState.VALUES,  # Possible values for publish_state
-            [True, False]             # Possible values for is_locked
+            [True, False]              # Possible values for is_locked
         ]
 
         # Add a fixture for every state in the product of features
