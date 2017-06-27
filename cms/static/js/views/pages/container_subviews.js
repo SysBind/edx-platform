@@ -296,7 +296,7 @@ define(['jquery', 'underscore', 'gettext', 'js/views/baseview', 'common/js/compo
             MessageView: MessageView,
             ViewLiveButtonController: ViewLiveButtonController,
             Publisher: Publisher,
-            PublisHistory: PublishHistory,
+            PublishHistory: PublishHistory,
             UnitAccess: UnitAccess
         };
     }); // end define();
