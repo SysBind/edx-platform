@@ -1,0 +1,70 @@
+// Local overrides for bootstrap navigation bar theming
+.navigation-container {
+  border-bottom: 1px solid rgb(0, 121, 188);
+  text-decoration: none;
+
+  .navbar {
+    margin: 0 auto;
+    max-width: 1180px;
+
+    .nav-item {
+      margin: 0 20px 0 0;
+      font-weight: 500;
+      font-family: "Open Sans",Verdana,Geneva,sans-serif,sans-serif;
+      text-transform: uppercase;
+      list-style: none;
+
+      .nav-link {
+        color: rgb(0, 117, 180);
+      }
+
+      .user-image-frame {
+        max-width: 40px;
+        border-radius: 10%;
+      }
+
+      // Dealing with creating a collapsed menu
+      &.nav-item-open-collapsed-only {
+        display: none;
+      }
+
+      @media (max-width: 991px) {
+        &.nav-item-open-collapsed, &.nav-item-open-collapsed-only {
+          display: initial;
+          margin: 5px 0;
+
+          a {
+            color: rgb(0, 117, 180);
+            padding: 0;
+          }
+        }
+        &.nav-item-hidden-collapsed {
+          display: none;
+        }
+      }
+    }
+
+    .btn-shopping-cart{
+      padding-top: 0.7rem
+    }
+
+    .navbar-right .nav-item {
+      @media (min-width: 991px) {
+        .nav-link {
+          text-transform: none;
+          color: rgb(60, 60, 60);
+          font-weight: 600;
+        }
+      }
+
+      &.dropdown {
+        display: initial !important;
+        cursor: pointer;
+
+        .dropdown-item {
+          text-transform: initial;
+        }
+      }
+    }
+  }
+}
