@@ -33,7 +33,7 @@ define(['jquery', 'underscore', 'gettext', 'js/views/baseview', 'common/js/compo
         });
 
         var UnitAccess = ContainerStateListenerView.extend({
-            initialize: function () {
+            initialize: function() {
                 ContainerStateListenerView.prototype.initialize.call(this);
                 this.template = this.loadTemplate('container-unit-access');
             },
@@ -293,10 +293,10 @@ define(['jquery', 'underscore', 'gettext', 'js/views/baseview', 'common/js/compo
         });
 
         return {
-            'MessageView': MessageView,
-            'ViewLiveButtonController': ViewLiveButtonController,
-            'Publisher': Publisher,
-            'PublishHistory': PublishHistory,
-            'UnitAccess': UnitAccess
+            MessageView: MessageView,
+            ViewLiveButtonController: ViewLiveButtonController,
+            Publisher: Publisher,
+            PublisHistory: PublishHistory,
+            UnitAccess: UnitAccess
         };
     }); // end define();
