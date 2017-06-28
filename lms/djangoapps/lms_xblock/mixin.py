@@ -17,6 +17,8 @@ _ = lambda text: text
 
 INVALID_USER_PARTITION_VALIDATION = _(u"This component's access settings refer to deleted or invalid group configurations.")
 INVALID_USER_PARTITION_GROUP_VALIDATION = _(u"This component's access settings refer to deleted or invalid groups.")
+#TODO: Fix phrasing of this message?
+NONSENSICAL_ACCESS_RESTRICTION = _(u"The access settings of this component contradict the unit level access settings.")
 
 
 class GroupAccessDict(Dict):
@@ -142,6 +144,24 @@ class LmsBlockMixin(XBlockMixin):
 
         raise NoSuchUserPartitionError("could not find a UserPartition with ID [{}]".format(user_partition_id))
 
+    # TODO:  Should this be a property?
+    @property
+    def component_has_nonsensical_access_settings(self):
+        unit_group_access = self.get_parent().group_access
+        component_group_access = self.group_access
+
+        for user_partition_id, unit_group_ids in unit_group_access.iteritems():
+            try:
+                component_group_ids = component_group_access[user_partition_id]
+                if component_group_ids and unit_group_ids and component_group_ids != unit_group_ids:
+                    # If the component restricts access to the same partition but different groups than the unit,
+                    # than the component is restricting access to a group that already can't see the content
+                    return True
+            except KeyError:
+                # If the component does not restrict access to the same partition scheme as the unit than there is no
+                # contradiction in the access settings
+                return False
+
     def validate(self):
         """
         Validates the state of this xblock instance.
@@ -150,6 +170,13 @@ class LmsBlockMixin(XBlockMixin):
         validation = super(LmsBlockMixin, self).validate()
         has_invalid_user_partitions = False
         has_invalid_groups = False
+        has_nonsensical_access_settings = False
+
+        parent = self.get_parent()
+        if parent.category == "vertical":
+            # Xblock is a component iff the parent is a vertical xblock
+            has_nonsensical_access_settings = self.component_has_nonsensical_access_settings
+
         for user_partition_id, group_ids in self.group_access.iteritems():
             try:
                 user_partition = self._get_user_partition(user_partition_id)
@@ -171,6 +198,7 @@ class LmsBlockMixin(XBlockMixin):
                     INVALID_USER_PARTITION_VALIDATION
                 )
             )
+
         if has_invalid_groups:
             validation.add(
                 ValidationMessage(
@@ -178,4 +206,14 @@ class LmsBlockMixin(XBlockMixin):
                     INVALID_USER_PARTITION_GROUP_VALIDATION
                 )
             )
+
+        if has_nonsensical_access_settings:
+            validation.add(
+                ValidationMessage(
+                    ValidationMessage.WARNING,
+                    NONSENSICAL_ACCESS_RESTRICTION
+                )
+            )
+
+
         return validation
