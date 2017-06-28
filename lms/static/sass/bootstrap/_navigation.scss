@@ -1,26 +1,26 @@
 // Local overrides for bootstrap navigation bar theming
 .navigation-container {
-  border-bottom: 1px solid rgb(0, 121, 188);
+  border-bottom: 1px solid $brand-primary;
   text-decoration: none;
 
   .navbar {
     margin: 0 auto;
-    max-width: 1180px;
+    max-width: map-get($container-max-widths, xl);
 
     .nav-item {
       margin: 0 20px 0 0;
-      font-weight: 500;
-      font-family: "Open Sans",Verdana,Geneva,sans-serif,sans-serif;
+      font-weight: $font-weight-normal;
+      font-family: $font-family-sans-serif;
       text-transform: uppercase;
       list-style: none;
 
       .nav-link {
-        color: rgb(0, 117, 180);
+        color: $brand-primary;
       }
 
       .user-image-frame {
         max-width: 40px;
-        border-radius: 10%;
+        border-radius: $border-radius;
       }
 
       // Dealing with creating a collapsed menu
@@ -28,13 +28,13 @@
         display: none;
       }
 
-      @media (max-width: 991px) {
+      @media (max-width: map-get($grid-breakpoints,lg)) {
         &.nav-item-open-collapsed, &.nav-item-open-collapsed-only {
           display: initial;
           margin: 5px 0;
 
           a {
-            color: rgb(0, 117, 180);
+            color: $brand-primary;
             padding: 0;
           }
         }
@@ -45,15 +45,16 @@
     }
 
     .btn-shopping-cart{
-      padding-top: 0.7rem
+      padding-top: 0.7rem; // $btn-padding-y-lg once themed
     }
 
     .navbar-right .nav-item {
-      @media (min-width: 991px) {
+      @media (min-width: map-get($grid-breakpoints,lg)) {
         .nav-link {
           text-transform: none;
-          color: rgb(60, 60, 60);
-          font-weight: 600;
+          color: $gray-dark;
+          font-weight: $font-weight-bold;
+          cursor: pointer;
         }
       }
 
