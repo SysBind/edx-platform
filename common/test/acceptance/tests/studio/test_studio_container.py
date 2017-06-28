@@ -537,13 +537,14 @@ class ContentGroupVisibilityModalTest(BaseGroupConfigurationsTest):
         Scenario: The component visibility modal can be set to be visible to all students and staff.
             Given I have a unit with one component
             When I go to the container page for that unit
-            Then the container page should not display the content visibility warning by default
-            And if I open the visibility editor modal for that unit's component
+            Then the container page should not display the content visibility warning by default.
+            If I then restrict access and save, and then I open the visibility editor modal for that unit's component
             And I select 'All Students and Staff'
             And I save the modal
             Then the visibility selection should be 'All Students and Staff'
             And the container page should still not display the content visibility warning
         """
+        self.select_and_verify_saved(self.html_component, self.CONTENT_GROUP_PARTITION, ['Dogs'])
         self.select_and_verify_saved(self.html_component, self.ALL_LEARNERS_AND_STAFF)
         self.verify_visibility_set(self.html_component, False)
 
