@@ -6,6 +6,7 @@ import itertools
 import json
 from datetime import datetime, timedelta
 
+from flaky import flaky
 from nose.plugins.attrib import attr
 from pytz import UTC
 
@@ -16,6 +17,7 @@ from common.test.acceptance.pages.common.utils import add_enrollment_course_mode
 from common.test.acceptance.pages.lms.course_home import CourseHomePage
 from common.test.acceptance.pages.lms.courseware import CoursewarePage
 from common.test.acceptance.pages.lms.progress import ProgressPage
+from common.test.acceptance.pages.lms.staff_view import StaffCoursewarePage
 from common.test.acceptance.pages.studio.overview import ContainerPage, CourseOutlinePage, ExpandCollapseLinkState
 from common.test.acceptance.pages.studio.settings_advanced import AdvancedSettingsPage
 from common.test.acceptance.pages.studio.settings_group_configurations import GroupConfigurationsPage
@@ -571,6 +573,7 @@ class UnitAccessTest(CourseOutlineTest):
         unit = self.course_outline_page.section_at(0).subsection_at(0).unit_at(0)
         self._set_restriction_on_unrestricted_unit(unit)
 
+    @flaky(max_runs=25, min_passes=25)
     def test_restricted_sections_for_content_group_users_in_lms(self):
         """
         Verify that those who are in an content track with access to a restricted unit are able
@@ -589,17 +592,17 @@ class UnitAccessTest(CourseOutlineTest):
         self.assertEqual(course_home_page.outline.num_units, 2)
 
         # Test for a user without additional content available
-        course_home_page.visit()
-        course_home_page.preview.set_staff_view_mode("Learner in Test Group B")
-        course_home_page.resume_course_from_header()
+        staff_page = StaffCoursewarePage(self.browser, self.course_id)
+        staff_page.set_staff_view_mode('Learner in Test Group B')
+        staff_page.wait_for_page()
         self.assertEqual(course_home_page.outline.num_units, 1)
 
         # Test for a user with additional content available
-        course_home_page.visit()
-        course_home_page.preview.set_staff_view_mode("Learner in Test Group A")
-        course_home_page.resume_course_from_header()
+        staff_page.set_staff_view_mode('Learner in Test Group A')
+        staff_page.wait_for_page()
         self.assertEqual(course_home_page.outline.num_units, 2)
 
+    @flaky(max_runs=25, min_passes=25)
     def test_restricted_sections_for_enrollment_track_users_in_lms(self):
         """
         Verify that those who are in an enrollment track with access to a restricted unit are able
@@ -628,15 +631,15 @@ class UnitAccessTest(CourseOutlineTest):
         self.assertEqual(course_home_page.outline.num_units, 2)
 
         # Test for a user without additional content available
-        course_home_page.visit()
-        course_home_page.preview.set_staff_view_mode("Learner in Verified")
-        course_home_page.resume_course_from_header()
+        staff_page = StaffCoursewarePage(self.browser, self.course_id)
+        staff_page.set_staff_view_mode('Learner in Verified')
+        staff_page.wait_for_page()
         self.assertEqual(course_home_page.outline.num_units, 1)
 
         # Test for a user with additional content available
-        course_home_page.visit()
-        course_home_page.preview.set_staff_view_mode("Learner in Audit")
-        course_home_page.resume_course_from_header()
+        staff_page = StaffCoursewarePage(self.browser, self.course_id)
+        staff_page.set_staff_view_mode('Learner in Audit')
+        staff_page.wait_for_page()
         self.assertEqual(course_home_page.outline.num_units, 2)
 
 
