@@ -6,7 +6,6 @@ import itertools
 import json
 from datetime import datetime, timedelta
 
-from flaky import flaky
 from nose.plugins.attrib import attr
 from pytz import UTC
 
@@ -573,7 +572,6 @@ class UnitAccessTest(CourseOutlineTest):
         unit = self.course_outline_page.section_at(0).subsection_at(0).unit_at(0)
         self._set_restriction_on_unrestricted_unit(unit)
 
-    @flaky(max_runs=25, min_passes=25)
     def test_restricted_sections_for_content_group_users_in_lms(self):
         """
         Verify that those who are in an content track with access to a restricted unit are able
@@ -602,7 +600,6 @@ class UnitAccessTest(CourseOutlineTest):
         staff_page.wait_for_page()
         self.assertEqual(course_home_page.outline.num_units, 2)
 
-    @flaky(max_runs=25, min_passes=25)
     def test_restricted_sections_for_enrollment_track_users_in_lms(self):
         """
         Verify that those who are in an enrollment track with access to a restricted unit are able
