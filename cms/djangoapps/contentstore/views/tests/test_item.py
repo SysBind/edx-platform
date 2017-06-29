@@ -38,6 +38,7 @@ from xmodule.modulestore.exceptions import ItemNotFoundError
 from xmodule.modulestore.tests.django_utils import ModuleStoreTestCase, TEST_DATA_SPLIT_MODULESTORE
 from xmodule.modulestore.tests.factories import ItemFactory, LibraryFactory, check_mongo_calls, CourseFactory
 from xmodule.x_module import STUDIO_VIEW, STUDENT_VIEW
+from xmodule.tests.test_xblock_wrappers import ModuleSystemFactory
 from xmodule.course_module import DEFAULT_START_DATE
 from xblock.core import XBlockAside
 from xblock.fields import Scope, String, ScopeIds
@@ -52,6 +53,7 @@ from opaque_keys.edx.locations import Location
 from xmodule.partitions.partitions import (
     Group, UserPartition, ENROLLMENT_TRACK_PARTITION_ID, MINIMUM_STATIC_PARTITION_ID
 )
+
 
 
 class AsideTest(XBlockAside):
@@ -1166,39 +1168,50 @@ class TestMoveItem(ItemTest):
         self.assertEqual(message.text, expected_message)
         self.assertEqual(message.type, expected_message_type)
 
-    #def test_move_component_to_force_nonsensical_access_restrictions(self):
+    def test_move_component_nonsensical_access_restriction_validation(self):
         """
         Test that moving a component with non-contradicting access
         restrictions into a unit that has contradicting access
         restrictions brings up the nonsensical access validation
-        message.
-        """
+        message and that the message does not show up when moved
+        into a unit where the component's access settings do not
+        contradict the unit's access settings.
         """
         group1 = self.course.user_partitions[0].groups[0]
         group2 = self.course.user_partitions[0].groups[1]
         vert2 = self.store.get_item(self.vert2_usage_key)
         html = self.store.get_item(self.html_usage_key)
 
-        # Set vert 2's access settings
+        # Set access settings so html will contradict vert2 when moved into that unit
         vert2.group_access = {self.course.user_partitions[0].id: [group1.id]}
-        # Set html's access settings to contradict unit 2's if html was in vert 2
         html.group_access = {self.course.user_partitions[0].id: [group2.id]}
         self.store.update_item(html, self.user.id)
         self.store.update_item(vert2, self.user.id)
+
+        # Verify that there is no warning when html is in a non contradicting unit
+        # This line is necessary to properly validate the html component from this test method TODO: SEE IF THERE IS A BETTER WAY
+        self.xmodule_runtime = ModuleSystemFactory()
         validation = html.validate()
         self.assertEqual(len(validation.messages), 0)
 
-        # Now move it
-        response = self._move_component(self.html_usage_key, self.vert2_usage_key)
-        self.assertEqual(response.status_code, 200)
+        # Now move it and confirm that the html component has been moved into vertical 2
+        self.assert_move_item(self.html_usage_key, self.vert2_usage_key)
+        html.parent = self.vert2_usage_key
+        self.store.update_item(html, self.user.id)
         validation = html.validate()
         self.assertEqual(len(validation.messages), 1)
-        self.verify_validation_message(
+        self._verify_validation_message(
             validation.messages[0],
             NONSENSICAL_ACCESS_RESTRICTION,
             ValidationMessage.ERROR,
         )
-        """
+
+        # Move the html component back and confirm that the warning is gone again
+        self.assert_move_item(self.html_usage_key, self.vert_usage_key)
+        html.parent = self.vert_usage_key
+        self.store.update_item(html, self.user.id)
+        validation = html.validate()
+        self.assertEqual(len(validation.messages), 0)
 
     @patch('contentstore.views.item.log')
     def test_move_logging(self, mock_logger):

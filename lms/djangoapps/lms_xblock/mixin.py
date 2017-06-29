@@ -191,6 +191,12 @@ class LmsBlockMixin(XBlockMixin):
                 user_partition = self._get_user_partition(user_partition_id)
             except NoSuchUserPartitionError:
                 has_invalid_user_partitions = True
+            #TODO: Find better way to do this
+            except AttributeError:
+                try:
+                    self.user_partitions[user_partition_id]
+                except KeyError:
+                    has_invalid_user_partitions = True
             else:
                 # Skip the validation check if the partition has been disabled
                 if user_partition.active:
