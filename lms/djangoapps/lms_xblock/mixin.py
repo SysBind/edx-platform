@@ -146,20 +146,35 @@ class LmsBlockMixin(XBlockMixin):
 
     # TODO:  Should this be a property?
     @property
-    def component_has_nonsensical_access_settings(self):
-        unit_group_access = self.get_parent().group_access
+    def has_nonsensical_access_settings(self):
+        """
+        Checks if a block's group access settings do not make sense.
+
+        By nonsensical access settings, we mean a component's access
+        settings which contradict the unit level access in that they
+        restrict access to a group that already can not see the
+        content due to the unit level access.  Note:  The only time
+        this contradiction can occur is when a component restricts
+        access to the same partition but a different group than the
+        unit.
+
+        Returns:
+            bool: True if the block is a component and its access
+            settings contradict the unit level access.
+        """
+        parent = self.get_parent()
+        if parent.category != "vertical":
+            return False
+
+        unit_group_access = parent.group_access
         component_group_access = self.group_access
 
         for user_partition_id, unit_group_ids in unit_group_access.iteritems():
             try:
                 component_group_ids = component_group_access[user_partition_id]
                 if component_group_ids and unit_group_ids and component_group_ids != unit_group_ids:
-                    # If the component restricts access to the same partition but different groups than the unit,
-                    # than the component is restricting access to a group that already can't see the content
                     return True
             except KeyError:
-                # If the component does not restrict access to the same partition scheme as the unit than there is no
-                # contradiction in the access settings
                 return False
 
     def validate(self):
@@ -170,12 +185,6 @@ class LmsBlockMixin(XBlockMixin):
         validation = super(LmsBlockMixin, self).validate()
         has_invalid_user_partitions = False
         has_invalid_groups = False
-        has_nonsensical_access_settings = False
-
-        parent = self.get_parent()
-        if parent.category == "vertical":
-            # Xblock is a component iff the parent is a vertical xblock
-            has_nonsensical_access_settings = self.component_has_nonsensical_access_settings
 
         for user_partition_id, group_ids in self.group_access.iteritems():
             try:
@@ -207,7 +216,7 @@ class LmsBlockMixin(XBlockMixin):
                 )
             )
 
-        if has_nonsensical_access_settings:
+        if self.has_nonsensical_access_settings:
             validation.add(
                 ValidationMessage(
                     ValidationMessage.WARNING,
