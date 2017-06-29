@@ -38,7 +38,6 @@ from xmodule.modulestore.exceptions import ItemNotFoundError
 from xmodule.modulestore.tests.django_utils import ModuleStoreTestCase, TEST_DATA_SPLIT_MODULESTORE
 from xmodule.modulestore.tests.factories import ItemFactory, LibraryFactory, check_mongo_calls, CourseFactory
 from xmodule.x_module import STUDIO_VIEW, STUDENT_VIEW
-from xmodule.tests.test_xblock_wrappers import ModuleSystemFactory
 from xmodule.course_module import DEFAULT_START_DATE
 from xblock.core import XBlockAside
 from xblock.fields import Scope, String, ScopeIds
@@ -1189,8 +1188,10 @@ class TestMoveItem(ItemTest):
         self.store.update_item(vert2, self.user.id)
 
         # Verify that there is no warning when html is in a non contradicting unit
-        # This line is necessary to properly validate the html component from this test method TODO: SEE IF THERE IS A BETTER WAY
-        self.xmodule_runtime = ModuleSystemFactory()
+        key_store = DictKeyValueStore()
+        field_data = KvsFieldData(key_store)
+        # Need this runtime to use the validate method from this test class
+        self.runtime = TestRuntime(services={'field-data': field_data})  # pylint: disable=abstract-class-instantiated
         validation = html.validate()
         self.assertEqual(len(validation.messages), 0)
 
