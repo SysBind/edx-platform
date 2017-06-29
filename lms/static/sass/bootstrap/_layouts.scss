@@ -28,8 +28,16 @@
     }
 
     .main-container {
-        border: 1px solid #d9d9d9;
-        background-color: #fff;
-        padding: 20px;
+        border: 1px solid $gray-lighter;
+        background-color: $white;
+
+        .page-header {
+            border-bottom: 1px solid $gray-lighter;
+            padding: 20px;
+        }
+
+        .page-content {
+            padding: 20px;
+        }
     }
 }
