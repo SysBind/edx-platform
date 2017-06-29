@@ -72,7 +72,6 @@ class ForumThreadViewedEventTransformer(EventTransformer):
             self['event'] = {}
             self.event = {}
 
-
         # Throw out the context dict within the event data
         # (different from the context dict extracted above)
         if 'context' in self.event:
@@ -104,6 +103,12 @@ class ForumThreadViewedEventTransformer(EventTransformer):
         if title is not None:
             del self.event['action']
             add_truncated_title_to_event_data(self.event, title)
+
+        # Change 'author' to 'target_username'
+        author = _get_string(self.event, 'author')
+        if author is not None:
+            del self.event['author']
+            self.event['target_username'] = author
 
         # Load user
         username = _get_string(self, 'username')

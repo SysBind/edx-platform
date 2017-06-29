@@ -2111,14 +2111,17 @@ class ForumThreadViewedEventTransformerTestCase(ForumsEnableMixin, UrlResetMixin
         )
         self.assertNotIn('url', event_trans['event'])
 
-    def test_ids(self):
+    def test_renamed_fields(self):
+        AUTHOR = 'joe-the-plumber'
         event, event_trans = _create_and_transform_event(
             course_id=self.course.id,
             topic_id=self.DUMMY_CATEGORY_ID,
             thread_id=self.DUMMY_THREAD_ID,
+            author=AUTHOR,
         )
         self.assertEqual(event_trans['event']['commentable_id'], self.DUMMY_CATEGORY_ID)
         self.assertEqual(event_trans['event']['id'], self.DUMMY_THREAD_ID)
+        self.assertEqual(event_trans['event']['target_username'], AUTHOR)
 
     def test_titles(self):
 
