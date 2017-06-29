@@ -26,6 +26,9 @@ from contentstore.views.item import (
     add_container_page_publishing_info
 )
 from contentstore.tests.utils import CourseTestCase
+from lms_xblock.mixin import (
+    NONSENSICAL_ACCESS_RESTRICTION
+)
 from student.tests.factories import UserFactory
 from xblock_django.models import XBlockConfiguration, XBlockStudioConfiguration, XBlockStudioConfigurationFlag
 from xmodule.capa_module import CapaDescriptor
@@ -42,6 +45,7 @@ from xblock.fragment import Fragment
 from xblock.runtime import DictKeyValueStore, KvsFieldData
 from xblock.test.tools import TestRuntime
 from xblock.exceptions import NoSuchHandlerError
+from xblock.validation import ValidationMessage
 from xblock_django.user_service import DjangoXBlockUserService
 from opaque_keys.edx.keys import UsageKey, CourseKey
 from opaque_keys.edx.locations import Location
@@ -1154,6 +1158,47 @@ class TestMoveItem(ItemTest):
         self.assertEqual(response.status_code, 400)
         response = json.loads(response.content)
         self.assertEqual(response['error'], 'Patch request did not recognise any parameters to handle.')
+
+    def _verify_validation_message(self, message, expected_message, expected_message_type):
+        """
+        Verify that the validation message has the expected validation message and type.
+        """
+        self.assertEqual(message.text, expected_message)
+        self.assertEqual(message.type, expected_message_type)
+
+    #def test_move_component_to_force_nonsensical_access_restrictions(self):
+        """
+        Test that moving a component with non-contradicting access
+        restrictions into a unit that has contradicting access
+        restrictions brings up the nonsensical access validation
+        message.
+        """
+        """
+        group1 = self.course.user_partitions[0].groups[0]
+        group2 = self.course.user_partitions[0].groups[1]
+        vert2 = self.store.get_item(self.vert2_usage_key)
+        html = self.store.get_item(self.html_usage_key)
+
+        # Set vert 2's access settings
+        vert2.group_access = {self.course.user_partitions[0].id: [group1.id]}
+        # Set html's access settings to contradict unit 2's if html was in vert 2
+        html.group_access = {self.course.user_partitions[0].id: [group2.id]}
+        self.store.update_item(html, self.user.id)
+        self.store.update_item(vert2, self.user.id)
+        validation = html.validate()
+        self.assertEqual(len(validation.messages), 0)
+
+        # Now move it
+        response = self._move_component(self.html_usage_key, self.vert2_usage_key)
+        self.assertEqual(response.status_code, 200)
+        validation = html.validate()
+        self.assertEqual(len(validation.messages), 1)
+        self.verify_validation_message(
+            validation.messages[0],
+            NONSENSICAL_ACCESS_RESTRICTION,
+            ValidationMessage.ERROR,
+        )
+        """
 
     @patch('contentstore.views.item.log')
     def test_move_logging(self, mock_logger):

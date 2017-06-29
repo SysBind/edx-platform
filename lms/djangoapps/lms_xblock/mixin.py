@@ -18,7 +18,7 @@ _ = lambda text: text
 INVALID_USER_PARTITION_VALIDATION = _(u"This component's access settings refer to deleted or invalid group configurations.")
 INVALID_USER_PARTITION_GROUP_VALIDATION = _(u"This component's access settings refer to deleted or invalid groups.")
 #TODO: Fix phrasing of this message?
-NONSENSICAL_ACCESS_RESTRICTION = _(u"The access settings of this component contradict the unit level access settings.")
+NONSENSICAL_ACCESS_RESTRICTION = _(u"This component's access settings contradict the unit's access settings.")
 
 
 class GroupAccessDict(Dict):
@@ -163,7 +163,7 @@ class LmsBlockMixin(XBlockMixin):
             settings contradict the unit level access.
         """
         parent = self.get_parent()
-        if parent.category != "vertical":
+        if str(parent.category) != "vertical":
             return False
 
         unit_group_access = parent.group_access
