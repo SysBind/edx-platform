@@ -219,7 +219,7 @@ class LmsBlockMixin(XBlockMixin):
         if self.has_nonsensical_access_settings:
             validation.add(
                 ValidationMessage(
-                    ValidationMessage.WARNING,
+                    ValidationMessage.ERROR,
                     NONSENSICAL_ACCESS_RESTRICTION
                 )
             )
