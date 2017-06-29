@@ -1943,7 +1943,7 @@ class SegmentIOForumThreadViewedEventTestCase(SegmentIOTrackingTestCaseBase):
         finally:
             middleware.process_response(request, None)
 
-    def test_thread_viewed_event(self):
+    def test_thread_viewed(self):
         """
         Tests that a SegmentIO thread viewed event is accepted and transformed.
 
@@ -1956,7 +1956,7 @@ class SegmentIOForumThreadViewedEventTestCase(SegmentIOTrackingTestCaseBase):
         self.assertEqual(event['name'], 'edx.forum.thread.viewed')
         self.assertEqual(event['event_type'], event['name'])
 
-    def test_non_thread_viewed_event(self):
+    def test_non_thread_viewed(self):
         """
         Tests that other BI events are thrown out.
         """
@@ -1970,7 +1970,14 @@ def _get_transformed_event(input_event):
     return transformer
 
 
-def _create_event(label='Forum: View Thread', include_context=True, username=None, course_id=None, **event_data):
+def _create_event(
+    label='Forum: View Thread',
+    include_context=True,
+    inner_context=None,
+    username=None,
+    course_id=None,
+    **event_data
+):
     result = {'name': 'edx.bi.app.navigation.screen'}
     if include_context:
         result['context'] = {'label': label}
@@ -1980,6 +1987,10 @@ def _create_event(label='Forum: View Thread', include_context=True, username=Non
         result['username'] = username
     if event_data:
         result['event'] = event_data
+    if inner_context:
+        if not event_data:
+            result['event'] = {}
+        result['event']['context'] = inner_context
     return result
 
 
@@ -2053,19 +2064,23 @@ class ForumThreadViewedEventTransformerTestCase(ForumsEnableMixin, UrlResetMixin
             discussion_topic_id=self.TEAM_CATEGORY_ID,
         )
 
-    def test_missing_context_event(self):
+    def test_missing_context(self):
         event = _create_event(include_context=False)
         with self.assertRaises(EventEmissionExit):
             _get_transformed_event(event)
 
-    def test_no_data_event(self):
+    def test_no_data(self):
         event, event_trans = _create_and_transform_event()
         event['name'] = 'edx.forum.thread.viewed'
         event['event_type'] = event['name']
         event['event'] = {}
         self.assertDictEqual(event_trans, event)
 
-    def test_non_thread_view_event(self):
+    def test_inner_context(self):
+        _, event_trans = _create_and_transform_event(inner_context={})
+        self.assertNotIn('context', event_trans['event'])
+
+    def test_non_thread_view(self):
         event = _create_event(
             label='Forum: Create Thread',
             course_id=self.course.id,
