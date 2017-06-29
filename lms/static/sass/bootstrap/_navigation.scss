@@ -3,9 +3,28 @@
   border-bottom: 1px solid $brand-primary;
   text-decoration: none;
 
+  &.slim {
+    border-bottom: 1px solid #a1a5a5;
+    box-shadow: 0 1px 5px 0 rgba(0,0,0,0.1);
+  }
+
   .navbar {
     margin: 0 auto;
     max-width: map-get($container-max-widths, xl);
+
+    .logo.slim a {
+      height: 30px;
+      margin-top: 4px;
+    }
+
+    .course-header {
+      font-size: $font-size-lg;
+      margin: 10px 10px 0 0;
+
+      .provider {
+        font-weight: $font-weight-bold;
+      }
+    }
 
     .nav-item {
       margin: 0 20px 0 0;
