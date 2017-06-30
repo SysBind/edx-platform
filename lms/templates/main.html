@@ -9,16 +9,19 @@
 ## rollout has been completed, this default can be switched to v2.
 <%! main_css = "style-main-v1" %>
 
+<%page expression_filter="h"/>
 
 <%namespace name='static' file='static_content.html'/>
 <% online_help_token = self.online_help_token() if hasattr(self, 'online_help_token') else None %>
 <%!
+from branding import api as branding_api
 from django.core.urlresolvers import reverse
 from django.utils.http import urlquote_plus
 from django.utils.translation import ugettext as _
 from django.utils.translation import get_language_bidi
-from branding import api as branding_api
+from openedx.core.djangolib.js_utils import dump_js_escaped_json
 from pipeline_mako import render_require_js_path_overrides
+
 %>
 <!DOCTYPE html>
 <!--[if lte IE 9]><html class="ie ie9 lte9" lang="${LANGUAGE_CODE}"><![endif]-->
@@ -80,7 +83,7 @@ from pipeline_mako import render_require_js_path_overrides
   % endif
 
   <script>
-    window.baseUrl = "${settings.STATIC_URL}";
+    window.baseUrl = "${settings.STATIC_URL | n, js_escaped_string}";
     (function (require) {
       require.config({
           baseUrl: window.baseUrl
@@ -112,7 +115,7 @@ from pipeline_mako import render_require_js_path_overrides
 % if ga_acct:
     <script type="text/javascript">
     var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', '${ga_acct}']);
+    _gaq.push(['_setAccount', '${ga_acct | n, js_escaped_string}']);
     _gaq.push(['_trackPageview']);
 
     (function() {
@@ -170,7 +173,7 @@ from pipeline_mako import render_require_js_path_overrides
 % if settings.FEATURES.get('ENABLE_ONLOAD_BEACON', False):
 <script>
   (function () {
-    var sample_rate = ${settings.ONLOAD_BEACON_SAMPLE_RATE};
+    var sample_rate = ${settings.ONLOAD_BEACON_SAMPLE_RATE | n, js_escaped_string};
     var roll = Math.floor(Math.random() * 100)/100;
     var onloadBeaconSent = false;
 
