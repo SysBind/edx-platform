@@ -124,7 +124,7 @@ define(
 
             it('Verifies that the ThumbnailView is not initialized on disabling the feature', function() {
                 createVideoListView(false);
-                expect(videoListView.itemViews[0].videoThumbnailView).toEqual(undefined)
+                expect(videoListView.itemViews[0].videoThumbnailView).toEqual(undefined);
             });
 
             it('renders as expected', function() {
