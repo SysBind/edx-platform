@@ -173,7 +173,7 @@ from pipeline_mako import render_require_js_path_overrides
 % if settings.FEATURES.get('ENABLE_ONLOAD_BEACON', False):
 <script>
   (function () {
-    var sample_rate = ${settings.ONLOAD_BEACON_SAMPLE_RATE | n, js_escaped_string};
+    var sample_rate = ${settings.ONLOAD_BEACON_SAMPLE_RATE | n, dump_js_escaped_json};
     var roll = Math.floor(Math.random() * 100)/100;
     var onloadBeaconSent = false;
 
