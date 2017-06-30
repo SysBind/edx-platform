@@ -1641,12 +1641,12 @@ PIPELINE_JS = {
         'source_filenames': main_vendor_js,
         'output_filename': 'js/lms-main_vendor.js',
     },
-    'bootstrap': {
+    'lms_bootstrap': {
         'source_filenames': [
             'common/js/vendor/tether.js',
             'common/js/vendor/bootstrap.js',
         ],
-        'output-filename': 'common/js/vendor/lms-bootstrap.js',
+        'output_filename': 'js/lms-bootstrap.js',
     },
     'module-descriptor-js': {
         'source_filenames': rooted_glob(COMMON_ROOT / 'static/', 'xmodule/descriptors/js/*.js'),
