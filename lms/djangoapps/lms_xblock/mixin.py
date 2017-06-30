@@ -11,6 +11,7 @@ from xblock.validation import ValidationMessage
 from xmodule.modulestore.inheritance import UserPartitionList
 from xmodule.partitions.partitions import NoSuchUserPartitionError, NoSuchUserPartitionGroupError
 
+
 # Please do not remove, this is a workaround for Django 1.8.
 # more information can be found here: https://openedx.atlassian.net/browse/PLAT-902
 _ = lambda text: text
@@ -144,7 +145,25 @@ class LmsBlockMixin(XBlockMixin):
 
         raise NoSuchUserPartitionError("could not find a UserPartition with ID [{}]".format(user_partition_id))
 
-    # TODO:  Should this be a property?
+    def get_parent_unit(self):
+        """
+        Finds xblock's parent unit if it exists.
+
+        Returns:
+            xblock: Returns the parent unit xblock if it exists.
+            If no parent unit exists, returns None.
+        """
+        xblock = self
+        while xblock:
+            xblock = xblock.get_parent()
+            if xblock is None:
+                return None
+            parent = xblock.get_parent()
+            if parent is None:
+                return None
+            if parent.category == "sequential":
+                return xblock
+
     @property
     def has_nonsensical_access_settings(self):
         """
@@ -162,11 +181,11 @@ class LmsBlockMixin(XBlockMixin):
             bool: True if the block is a component and its access
             settings contradict the unit level access.
         """
-        parent = self.get_parent()
-        if str(parent.category) != "vertical":
+        parent_unit = self.get_parent_unit()
+        if not parent_unit:
             return False
 
-        unit_group_access = parent.group_access
+        unit_group_access = parent_unit.group_access
         component_group_access = self.group_access
 
         for user_partition_id, unit_group_ids in unit_group_access.iteritems():
@@ -192,6 +211,7 @@ class LmsBlockMixin(XBlockMixin):
             except NoSuchUserPartitionError:
                 has_invalid_user_partitions = True
             #TODO: Find better way to do this
+            # This exception check is for tests on validation messages in contentstore/views/tests/test_item.py
             except AttributeError:
                 try:
                     self.user_partitions[user_partition_id]
