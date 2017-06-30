@@ -9,12 +9,14 @@ define(
             initialize: function(options) {
                 this.template = this.loadTemplate('previous-video-upload-list');
                 this.encodingsDownloadUrl = options.encodingsDownloadUrl;
+                this.videoImageUploadEnabled = options.videoImageUploadEnabled;
                 this.itemViews = this.collection.map(function(model) {
                     return new PreviousVideoUploadView({
                         videoImageUploadURL: options.videoImageUploadURL,
                         defaultVideoImageURL: options.defaultVideoImageURL,
                         videoHandlerUrl: options.videoHandlerUrl,
                         videoImageSettings: options.videoImageSettings,
+                        videoImageUploadEnabled: options.videoImageUploadEnabled,
                         model: model
                     });
                 });
@@ -23,7 +25,10 @@ define(
             render: function() {
                 var $el = this.$el,
                     $tabBody;
-                $el.html(this.template({encodingsDownloadUrl: this.encodingsDownloadUrl}));
+                $el.html(this.template({
+                    encodingsDownloadUrl: this.encodingsDownloadUrl,
+                    videoImageUploadEnabled: this.videoImageUploadEnabled
+                }));
                 $tabBody = $el.find('.js-table-body');
                 _.each(this.itemViews, function(view) {
                     $tabBody.append(view.render().$el);

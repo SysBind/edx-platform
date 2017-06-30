@@ -14,7 +14,8 @@ define([
         previousUploads,
         videoSupportedFileFormats,
         videoUploadMaxFileSizeInGB,
-        videoImageSettings
+        videoImageSettings,
+        videoImageUploadEnabled
     ) {
         var activeView = new ActiveVideoUploadListView({
                 postUrl: videoHandlerUrl,
@@ -43,7 +44,8 @@ define([
                                 videoHandlerUrl: videoHandlerUrl,
                                 collection: updatedCollection,
                                 encodingsDownloadUrl: encodingsDownloadUrl,
-                                videoImageSettings: videoImageSettings
+                                videoImageSettings: videoImageSettings,
+                                videoImageUploadEnabled: videoImageUploadEnabled
                             });
                         $contentWrapper.find('.wrapper-assets').replaceWith(updatedView.render().$el);
                     });
@@ -55,7 +57,8 @@ define([
                 videoHandlerUrl: videoHandlerUrl,
                 collection: new Backbone.Collection(previousUploads),
                 encodingsDownloadUrl: encodingsDownloadUrl,
-                videoImageSettings: videoImageSettings
+                videoImageSettings: videoImageSettings,
+                videoImageUploadEnabled: videoImageUploadEnabled
             });
         $contentWrapper.append(activeView.render().$el);
         $contentWrapper.append(previousView.render().$el);
