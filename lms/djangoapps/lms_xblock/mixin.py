@@ -18,7 +18,6 @@ _ = lambda text: text
 
 INVALID_USER_PARTITION_VALIDATION = _(u"This component's access settings refer to deleted or invalid group configurations.")
 INVALID_USER_PARTITION_GROUP_VALIDATION = _(u"This component's access settings refer to deleted or invalid groups.")
-#TODO: Fix phrasing of this message?
 NONSENSICAL_ACCESS_RESTRICTION = _(u"This component's access settings contradict the unit's access settings.")
 
 
