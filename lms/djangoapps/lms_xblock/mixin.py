@@ -250,5 +250,4 @@ class LmsBlockMixin(XBlockMixin):
                 )
             )
 
-
         return validation

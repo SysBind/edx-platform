@@ -54,7 +54,6 @@ from xmodule.partitions.partitions import (
 )
 
 
-
 class AsideTest(XBlockAside):
     """
     Test xblock aside class

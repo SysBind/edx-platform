@@ -5,7 +5,7 @@ import ddt
 from nose.plugins.attrib import attr
 
 from lms_xblock.mixin import (
-    INVALID_USER_PARTITION_VALIDATION, INVALID_USER_PARTITION_GROUP_VALIDATION,  NONSENSICAL_ACCESS_RESTRICTION
+    INVALID_USER_PARTITION_VALIDATION, INVALID_USER_PARTITION_GROUP_VALIDATION, NONSENSICAL_ACCESS_RESTRICTION
 )
 from xblock.validation import ValidationMessage
 from xmodule.modulestore import ModuleStoreEnum
