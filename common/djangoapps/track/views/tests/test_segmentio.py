@@ -70,11 +70,6 @@ class SegmentIOTrackingTestCase(SegmentIOTrackingTestCaseBase):
         self.post_segmentio_event(action=action)
         self.assert_no_events_emitted()
 
-    @data('edx.bi.some_name', 'EDX.BI.CAPITAL_NAME')
-    def test_segmentio_ignore_names(self, name):
-        self.post_segmentio_event(name=name)
-        self.assert_no_events_emitted()
-
     def test_segmentio_ignore_unknown_libraries(self):
         self.post_segmentio_event(library_name='foo')
         self.assert_no_events_emitted()
