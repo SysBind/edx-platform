@@ -6,7 +6,11 @@
 @import 'edx-bootstrap/sass/open-edx/theme';
 @import 'bootstrap/scss/bootstrap';
 
+// Variables
+@import 'variables';
+
 // Elements
 @import 'footer';
 @import 'navigation';
 @import 'layouts';
+

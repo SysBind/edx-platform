@@ -4,8 +4,8 @@
   text-decoration: none;
 
   &.slim {
-    border-bottom: 1px solid #a1a5a5;
-    box-shadow: 0 1px 5px 0 rgba(0,0,0,0.1);
+    border-bottom: 1px solid $inverse-color;
+    box-shadow: 0 1px 5px 0 $black-t0;
   }
 
   .navbar {
@@ -13,13 +13,13 @@
     max-width: map-get($container-max-widths, xl);
 
     .logo.slim a {
-      height: 30px;
-      margin-top: 4px;
+      height: $baseline*3/2;
+      margin-top: $baseline/5;
     }
 
     .course-header {
       font-size: $font-size-lg;
-      margin: 10px 10px 0 0;
+      margin: $baseline/2 $baseline/2 0 0;
 
       .provider {
         font-weight: $font-weight-bold;
@@ -27,7 +27,7 @@
     }
 
     .nav-item {
-      margin: 0 20px 0 0;
+      margin: 0 $baseline 0 0;
       font-weight: $font-weight-normal;
       font-family: $font-family-sans-serif;
       text-transform: uppercase;
@@ -38,7 +38,7 @@
       }
 
       .user-image-frame {
-        max-width: 40px;
+        max-width: $baseline*2;
         border-radius: $border-radius;
       }
 
@@ -50,7 +50,7 @@
       @media (max-width: map-get($grid-breakpoints,lg)) {
         &.nav-item-open-collapsed, &.nav-item-open-collapsed-only {
           display: initial;
-          margin: 5px 10px;
+          margin: $baseline/4 $baseline/2;
 
           a {
             color: $brand-primary;
@@ -58,7 +58,7 @@
             text-decoration: none;
 
             &:hover {
-              color: $gray;
+              color: $input-border-color;
             }
           }
         }
@@ -76,7 +76,7 @@
       @media (min-width: map-get($grid-breakpoints,lg)) {
         .nav-link {
           text-transform: none;
-          color: $gray-dark;
+          color: $brand-inverse;
           font-weight: $font-weight-bold;
           cursor: pointer;
         }

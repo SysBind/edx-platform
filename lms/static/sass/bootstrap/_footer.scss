@@ -2,27 +2,27 @@
 // ====================
 
 .wrapper-footer {
-  box-shadow: 0 -1px 5px 0 rgba(0,0,0,0.1);
-  border-top: 1px solid #c5c6c7;
-  background-color: $white;
-  margin-top: 40px;
-  padding: 20px;
+  box-shadow: 0 -1px 5px 0 $black-t0;
+  border-top: 1px solid $navbar-light-disabled-color;
+  background-color: $body-bg;
+  margin-top: $baseline/2;
+  padding: $baseline;
   font-family: $font-family-sans-serif;
 
   footer {
-    max-width: 1140px; // Use map-get($container-max-widths, xl) once theming complete
+    max-width: $lms-max-width;
     margin: 0 auto;
 
     .site-nav {
       padding: 0;
 
       .nav-item {
-        margin-right: 20px;
+        margin-right: $baseline;
 
         .nav-link {
           text-decoration: none;
           padding: 0;
-          color: $gray-dark;
+          color: $brand-inverse;
 
           &:hover {
             color: $brand-primary;
@@ -38,7 +38,7 @@
         .nav-link {
           text-decoration: none;
           padding: 0;
-          margin-right: 5px;
+          margin-right: $baseline/4;
           font-size: $font-size-sm;
         }
       }
@@ -49,11 +49,11 @@
     }
 
     footer-language-selector {
-      margin: 20px 0
+      margin: $baseline 0;
     }
 
     .copyright {
-      margin-top: 20px;
+      margin-top: $baseline;
       font-size: $font-size-xs;
       color: $gray-dark;
     }
