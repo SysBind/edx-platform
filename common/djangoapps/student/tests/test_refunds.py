@@ -2,6 +2,7 @@
     Tests for enrollment refund capabilities.
 """
 import logging
+from slumber.exceptions import HttpClientError
 import unittest
 from datetime import datetime, timedelta
 
@@ -20,6 +21,7 @@ from mock import patch
 # Their testcases are only run under lms.
 from certificates.models import CertificateStatuses, GeneratedCertificate  # pylint: disable=import-error
 from certificates.tests.factories import GeneratedCertificateFactory  # pylint: disable=import-error
+from commerce.tests.mocks import mock_order_endpoint
 from openedx.core.djangoapps.commerce.utils import ECOMMERCE_DATE_FORMAT
 from student.models import CourseEnrollment, CourseEnrollmentAttribute
 from student.tests.factories import CourseModeFactory, UserFactory
@@ -212,3 +214,13 @@ class RefundableTest(SharedModuleStoreTestCase):
         self.client.login(username="jack", password="test")
         resp = self.client.post(reverse('student.views.dashboard', args=[]))
         self.assertEqual(resp.status_code, 200)
+
+    def test_refund_cutoff_date_with_client_error(self):
+        """ Verify that dashboard will not throw internal server error if HttpClientError
+         raised while getting order.
+         """
+        self.client.login(username=self.user.username, password=self.user.password)
+        with mock_order_endpoint(order_number='edx-100000', exception=HttpClientError):
+            response = self.client.post(reverse('student.views.dashboard', args=[]))
+
+        self.assertEqual(response.status_code, 200)
