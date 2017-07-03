@@ -59,9 +59,9 @@ define(
                         min_size: VIDEO_IMAGE_MIN_BYTES,
                         max_width: VIDEO_IMAGE_MAX_WIDTH,
                         max_height: VIDEO_IMAGE_MAX_HEIGHT,
-                        supported_file_formats: VIDEO_IMAGE_SUPPORTED_FILE_FORMATS
-                    },
-                    videoImageUploadEnabled: videoImageUploadEnabled
+                        supported_file_formats: VIDEO_IMAGE_SUPPORTED_FILE_FORMATS,
+                        video_image_upload_enabled: videoImageUploadEnabled
+                    }
                 });
                 $videoListEl = videoListView.render().$el;
 

@@ -9,14 +9,13 @@ define(
             initialize: function(options) {
                 this.template = this.loadTemplate('previous-video-upload-list');
                 this.encodingsDownloadUrl = options.encodingsDownloadUrl;
-                this.videoImageUploadEnabled = options.videoImageUploadEnabled;
+                this.videoImageUploadEnabled = options.videoImageSettings.video_image_upload_enabled;
                 this.itemViews = this.collection.map(function(model) {
                     return new PreviousVideoUploadView({
                         videoImageUploadURL: options.videoImageUploadURL,
                         defaultVideoImageURL: options.defaultVideoImageURL,
                         videoHandlerUrl: options.videoHandlerUrl,
                         videoImageSettings: options.videoImageSettings,
-                        videoImageUploadEnabled: options.videoImageUploadEnabled,
                         model: model
                     });
                 });

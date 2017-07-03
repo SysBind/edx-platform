@@ -19,7 +19,7 @@ define(
             initialize: function(options) {
                 this.template = HtmlUtils.template(previousVideoUploadTemplate);
                 this.videoHandlerUrl = options.videoHandlerUrl;
-                this.videoImageUploadEnabled = options.videoImageUploadEnabled;
+                this.videoImageUploadEnabled = options.videoImageSettings.video_image_upload_enabled;
 
                 if (this.videoImageUploadEnabled) {
                     this.videoThumbnailView = new VideoThumbnailView({
